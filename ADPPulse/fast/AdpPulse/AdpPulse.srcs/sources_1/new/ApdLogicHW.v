@@ -26,6 +26,8 @@ module ApdLogicHW(
     //Input pulse source
     input wire Adp_pulse,
     
+    input wire AdpSim,
+    
     //Input Delay(clk cycle) in 16bit 
     input wire [31:0] Quench_T,
     input wire [31:0] Wait_T,
@@ -48,7 +50,8 @@ reg [31:0]clk_tgt = 32'd0;
 
 reg AfterReset = 0;
 
-reg AdpPE, AdpPre;
+reg AdpPE, AdpPre; 
+//reg AdpSimPE, AdpSimPre;
 
 parameter S0 = 2'd0, S1 = 2'd1, S2 = 2'd2, S3 = 2'd3;
 
@@ -86,6 +89,8 @@ begin
         begin
             state <= S0;
             clk_tgt <= 0;
+            AdpPre <= Adp_pulse;
+            //AdpSimPre <=AdpSim;
         end
     else 
         begin
@@ -110,6 +115,8 @@ begin
                         clk_tgt <= 0;
                         NoP <= NoP +1;
                         AdpPre <= Adp_pulse;
+                       // AdpSimPre <=AdpSim;
+                        
                       end
                     else
                       begin
@@ -132,8 +139,10 @@ begin
                end
                default:
                begin
-                  AdpPE = (Adp_pulse == 1) & (AdpPre == 0);
+                  AdpPE = ((Adp_pulse == 1) && (AdpPre == 0));
+                  //AdpSimPE= ((AdpSim ==1) && (AdpSimPre ==0));
                   AdpPre <= Adp_pulse;
+                  //AdpSimPre <=AdpSim;
                   if(AdpPE) 
                       begin
                         clk_tgt <= 0;

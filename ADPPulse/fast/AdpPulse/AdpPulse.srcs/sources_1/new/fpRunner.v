@@ -145,8 +145,11 @@ module fpRunner(
     
     wire clear;
     assign clear = ep40wire[0];
+    
     //simulate the apd pulse
-    //assign apd = ep40wire[1];
+    wire apd_sim;
+    assign apd_sim = ep40wire[1];
+    
     wire enableus;
       
     reg [31:0] quench_tgt;
@@ -176,6 +179,10 @@ module fpRunner(
         .clk(sys_clk),
         //Input pulse source
         .Adp_pulse(apd),
+
+        //Add one more triggering source, with software button
+        .AdpSim(apd_sim),
+
         
         //Input Delay(clk cycle) in 16bit 
         .Quench_T(quench_tgt),
